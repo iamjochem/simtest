@@ -14,7 +14,9 @@ A simple test application implementing a minimal REST-like API for playing a gam
 3. [POST] /games/:id/:char
 ```
 
-all endpoints return the same JSON game-data structure (assuming no errors were encountered), in the event of some kind of error (regardless of type) symfony-standard error output will be generated as JSON ... this is not particularly helpful, in a real-world application API error output should be normalized/improved.
+All endpoints return the same JSON game-data structure (assuming no errors were encountered), in the event of some kind of error (regardless of type) symfony-standard error output will be generated as JSON ... this is not particularly helpful, in a real-world application API error output should be normalized/improved such that the base error output is the same regardless of the whether the app is in "debug" mode:
+
+
 
 ### API parameters
 
@@ -57,6 +59,34 @@ an example with real values:
 }
 ```
 
+### Error responses
+
+As mentioned above, error response data structures are currently determined based on "debug" configuration.
+
+#### With "debug" (e.g. in the "dev" ENV)
+
+```json
+[
+    {
+        "message": "Game #1 has already finished.",
+        "class"  : "Symfony\\Component\\HttpKernel\\Exception\\BadRequestHttpException",
+        "trace"  : [/* lots of object literals here! */]
+    }
+]
+```
+
+### Without "debug" (e.g. in the "prod" ENV)
+
+```json
+{
+    "error"      : {
+        "code"   : 400,
+        "message": "Bad Request"
+    }
+}
+```
+
+Note that in both the above cases the HTTP response status code is *`400: Bad Request`*, ideally the custom error message should always be returned and debug information (i.e. `class`, `trace` properties) should be included additively.
 
 
 

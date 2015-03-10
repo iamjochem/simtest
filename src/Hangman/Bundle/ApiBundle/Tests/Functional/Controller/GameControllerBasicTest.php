@@ -17,7 +17,11 @@ extends     GameControllerBaseWebTestCase
         $client = $this->createGameClient();
 
         $client->request('POST', '/games');
-        $this->assertGameJsonIsValid($this->getGameJsonFromClient($client));
+
+        $resp   = $client->getResponse();
+
+        $this->assertResponseIsJSON($resp);
+        $this->assertGameJsonIsValid($this->getGameJsonFromResponse($resp));
     }
 
     public function testStatusAction() 
@@ -28,15 +32,22 @@ extends     GameControllerBaseWebTestCase
         
         $client->request('POST', '/games');
 
-        $game   = $this->getGameJsonFromClient($client);
+        $resp   = $client->getResponse();
+        $game   = $this->getGameJsonFromResponse($resp);
+
+        $this->assertResponseIsJSON($resp);
         $this->assertGameJsonIsValid($game);
 
         // ---
 
         $client->request('GET',  '/games/' . $game->game_id);
         
-        $game2  = $this->getGameJsonFromClient($client);
+        $resp   = $client->getResponse();
+        $game2  = $this->getGameJsonFromResponse($resp);
+        
+        $this->assertResponseIsJSON($resp);        
         $this->assertGameJsonIsValid($game2);
+        $this->assertSame($game->game_id, $game2->game_id, 'Game id ichanged across requests.');
     }
 
     public function testGuessAction()  
@@ -47,14 +58,21 @@ extends     GameControllerBaseWebTestCase
         
         $client->request('POST', '/games');
 
-        $game   = $this->getGameJsonFromClient($client);
+        $resp   = $client->getResponse();
+        $game   = $this->getGameJsonFromResponse($resp);
+
+        $this->assertResponseIsJSON($resp);
         $this->assertGameJsonIsValid($game);
 
         // ---
       
         $client->request('POST',  '/games/' . $game->game_id . '/a'); // guessing the letter "a"        
         
-        $game2  = $this->getGameJsonFromClient($client);
+        $resp   = $client->getResponse();
+        $game2  = $this->getGameJsonFromResponse($resp);
+
+        $this->assertResponseIsJSON($resp);
         $this->assertGameJsonIsValid($game2);
+        $this->assertSame($game->game_id, $game2->game_id, 'Game id ichanged across requests.');
     }
 }

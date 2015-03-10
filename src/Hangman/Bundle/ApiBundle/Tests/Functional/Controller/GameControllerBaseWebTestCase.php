@@ -3,7 +3,7 @@
 namespace   	Hangman\Bundle\ApiBundle\Tests\Functional\Controller;
 
 use             Liip\FunctionalTestBundle\Test\WebTestCase;
-use         	Symfony\Component\HttpKernel\Client;
+use         	Symfony\Component\HttpFoundation\Response;
 
 use             Doctrine\Common\DataFixtures\Purger\ORMPurger;
 
@@ -52,6 +52,31 @@ extends 	   	WebTestCase
     }
 
     /**
+     * perform basic assertions on the given Response
+     * 
+     * @param  Response $resp 
+     * @return void
+     */
+    protected function assertResponseIsJSON(Response $resp)
+    {
+        $this->assertTrue($resp->headers->contains('Content-Type', 'application/json'), 'Response Content-Type is not "application/json"');
+    }
+
+    /**
+     * extract the decoded JSON data from the given client instance.
+     * 
+     * @param   Response $resp 
+     * @return  mixed               
+     */
+    protected static function getGameJsonFromResponse(Response $resp)
+    {        
+        $raw  = $resp->getContent();        
+        $json = is_string($raw) && strlen($raw) ? json_decode($raw) : null;
+
+        return $json;
+    }
+
+    /**
      * perform assertions on [decoded] game JSON data.
      * 
      * N.B. the assumption is that the data is represented in PHP as an object,
@@ -88,20 +113,6 @@ extends 	   	WebTestCase
 
         $this->assertTrue(is_string($json->word), 'Game JSON: `word` is not a string');
         $this->assertGreaterThan(0, strlen($json->word)); // note: we removed words shorter than 4 chars from the DB, our test should reflect this?
-    }
-
-    /**
-     * extract the decoded JSON data from the given client instance.
-     * 
-     * @param  	Client $client 
-     * @return 	mixed 				
-     */
-    protected static function getGameJsonFromClient(Client $client)
-    {        
-        $raw  = $client->getResponse()->getContent();        
-        $json = is_string($raw) && strlen($raw) ? json_decode($raw) : null;
-
-        return $json;
     }
 
     /**

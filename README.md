@@ -42,9 +42,9 @@ all endpoints return the following JSON data structure (assuming no errors);
 
 with the following logical replacements:
 
-1. <INTEGER>		- an unsigned integer
-2. <STATUS>			- one of the following string values: busy, fail, success
-3. <WORD_STRING>	- a string representing the guessed word, unguessed letters are replaced by the `.` (period) character.
+1. `<INTEGER>`		- an unsigned integer
+2. `<STATUS>`		- one of the following string values: busy, fail, success
+3. `<WORD_STRING>`	- a string representing the guessed word, unguessed letters are replaced by the `.` (period) character.
 
 an example with real values:
 

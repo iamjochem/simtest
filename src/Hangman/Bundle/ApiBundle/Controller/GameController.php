@@ -12,14 +12,11 @@ use Hangman\Bundle\DatastoreBundle\Entity\ORM\Game;
 class GameController extends Controller
 {
 	/**
-	 * [indexAction description]
+	 * TODO: implement a simple HTML interface for interacting with the API?
 	 * 
 	 * @return Response
 	 */
-    public function indexAction()
-    {
-
-    }
+    // public function indexAction() {}
 
     /**
      * [createAction description]

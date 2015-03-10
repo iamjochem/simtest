@@ -1,7 +1,7 @@
-hangman:
-    path:     /
-    defaults: { _controller: HangmanApiBundle:Game:index, _format: 'html' }
-    methods:  [GET]
+#hangman:
+#    path:     /
+#    defaults: { _controller: HangmanApiBundle:Game:index, _format: 'html' }
+#    methods:  [GET]
 
 hangman_api_game_create:
     path:     /games

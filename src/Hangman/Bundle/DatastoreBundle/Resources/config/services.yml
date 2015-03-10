@@ -1,0 +1,15 @@
+services:
+
+    hangman_datastore.word_repository:
+        class: Hangman\Bundle\DatastoreBundle\Repository\ORM\WordRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments:
+            - Hangman\Bundle\DatastoreBundle\Entity\ORM\Word
+
+    hangman_datastore.game_repository:
+        class: Hangman\Bundle\DatastoreBundle\Repository\ORM\GameRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments:
+            - Hangman\Bundle\DatastoreBundle\Entity\ORM\Game

@@ -1,0 +1,24 @@
+hangman:
+    path:     /
+    defaults: { _controller: HangmanApiBundle:Game:index, _format: 'html' }
+    methods:  [GET]
+
+hangman_api_game_create:
+    path:     /games
+    defaults: { _controller: HangmanApiBundle:Game:create, _format: 'json' }
+    methods:  [POST]
+
+hangman_api_game_status:
+    path:     /games/{game_id}
+    defaults: { _controller: HangmanApiBundle:Game:status, _format: 'json' }
+    methods:  [GET]
+    requirements:
+        game_id:  \d+
+
+hangman_api_game_guess:
+    path:     /games/{game_id}/{letter}
+    defaults: { _controller: HangmanApiBundle:Game:guess, _format: 'json' }
+    methods:  [POST]
+    requirements:
+        game:  \d+
+        letter_id: "[a-z]{1}"

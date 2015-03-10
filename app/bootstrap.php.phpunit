@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * a wrapper for bootstrap.php.cache used when running tests,
+ * this file takes care of recreating a pristine DB before every test run.
+ */
+
+require_once __DIR__ . '/bootstrap.php.cache';
+require_once __DIR__ . '/AppKernel.php';
+ 
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Input\ArrayInput;
+ 	
+use Doctrine\Bundle\DoctrineBundle\Command\DropDatabaseDoctrineCommand;
+use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
+use Doctrine\Bundle\MigrationsBundle\Command\MigrationsMigrateDoctrineCommand;
+use Doctrine\Bundle\FixturesBundle\Command\LoadDataFixturesDoctrineCommand;
+ 
+$kernel = new AppKernel('test', true); // create a "test" kernel
+$kernel->boot();
+ 
+$application = new Application($kernel);
+$cout 		 = new ConsoleOutput(ConsoleOutput::VERBOSITY_QUIET);
+
+// add the database:drop command to the application and run it
+$command = new DropDatabaseDoctrineCommand();
+$application->add($command);
+$input = new ArrayInput(array(
+    'command' => 'doctrine:database:drop',
+    '--force' => true,
+));
+$command->run($input, $cout);
+ 
+// This stops a bug where Drop Database does not close the handle properly & causes subsequent
+// "database not found" errors.
+$connection = $application->getKernel()->getContainer()->get('doctrine')->getConnection();
+if ($connection->isConnected()) {
+    $connection->close();
+}
+
+// add the database:create command to the application and run it
+$command = new CreateDatabaseDoctrineCommand();
+$application->add($command);
+$input = new ArrayInput(array(
+    'command' => 'doctrine:database:create',
+));
+$command->run($input, $cout);
+
+// Run the database migrations, with --quiet because they are quite
+// chatty on the console.
+$command = new MigrationsMigrateDoctrineCommand();
+$application->add($command);
+$input = new ArrayInput(array(
+    'command' => 'doctrine:migrations:migrate',
+    '--quiet' => true,
+    '--no-interaction' => true,
+));
+$input->setInteractive(false);
+$command->run($input, $cout);

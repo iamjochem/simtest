@@ -34,10 +34,21 @@ extends 	   	WebTestCase
      * @return void
      */
     protected function purgeDatabase()
-    {
-        $purger = new ORMPurger($this->getContainer()->get('doctrine')->getManager());
+    {   
+        $doctrine   = $this->getContainer()->get('doctrine');
+        $em         = $doctrine->getManager();
+        $dbconn     = $em->getConnection();
+        $platform   = $dbconn->getDatabasePlatform();
+        $purger     = new ORMPurger($em);
+        
+        // get rid of all the things ...
         $purger->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE);
         $purger->purge();        
+
+        // start count all the new things from 1 ....    
+        foreach ($em->getMetadataFactory()->getAllMetadata() as $metadata) 
+            if (!$metadata->isMappedSuperclass)
+                $dbconn->executeUpdate("ALTER TABLE " . $metadata->getQuotedTableName($platform) . " AUTO_INCREMENT=1;");
     }
 
     /**

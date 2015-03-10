@@ -48,15 +48,72 @@ with the following logical replacements:
 
 
 
-## App Installation
+## Installing the app
 
+### Assumptions:
 
+1. You have `git` installed. 
 
+2. You have `php` installed (version 5.3.2+).
 
-## App Testing
+3. You have a working [global] copy of the `composer` command installed, if not please follow the instructions found [here](https://getcomposer.org/doc/00-intro.md), an alternative for MacOSX users is to run `brew install composer`.
+
+run the following commands in a directory of your choice (you will be asked for a few configuration details during the process):
+
+```
+git clone git@github.com:iamjochem/simtest.git
+cd simtest
+composer install
+app/console doctrine:database:create
+app/console doctrine:migrations:migrate
+app/console doctrine:fixtures:load
+```
+
+## Testing the app
 
 From the root of your project directory run the following:
 
 ```sh
 ./bin/phpunit -c app
+```
+
+
+### Running the app
+
+For development purposes you can run the application using symfony's built-in web-server using the following command (from the root of your project):
+
+```sh
+app/console server:run
+```
+
+For production enviroments you will need to setup a web-server with a suitable configuration, I recommend using [Nginx](http://nginx.org/).
+
+Below is an example vhost configuration for Nginx:
+
+```
+server {
+    listen       80;
+    server_name  siminterview.local;
+    root         /work/test/siminterview/web;
+
+    location / {
+        try_files $uri /app.php$is_args$args;
+    }
+
+    location ~ ^/(app_dev|config)\.php(/|$) {
+        include         /usr/local/etc/nginx/conf.d/php-fpm.settings;         
+        fastcgi_param   HTTPS off;
+    }
+
+    # PROD
+    location ~ ^/app\.php(/|$) {
+        include         /usr/local/etc/nginx/conf.d/php-fpm.settings;         
+        fastcgi_param   HTTPS off;
+
+        # Prevents URIs that include the front controller. This will 404:
+        # http://domain.tld/app.php/some-path
+        # Remove the internal directive to allow URIs like this
+        internal;
+    }
+}
 ```

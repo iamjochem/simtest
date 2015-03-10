@@ -34,5 +34,7 @@ implements      OrderedFixtureInterface
     {
         $game = new GameEntity();
         $game->setWord(static::GAME_WORD);
+
+        return $game;
     }
 }

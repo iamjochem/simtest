@@ -18,7 +18,7 @@ extends     GameDataBase
         $len   = count($chars) + 5; // implies 5 failed guesses
 
         foreach (range('a', 'z') as $c) {            
-            if (!in_array($c, $chars)
+            if (!in_array($c, $chars))
                 $chars[] = $c;
 
             if (count($chars) === $len)

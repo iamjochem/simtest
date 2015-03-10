@@ -17,7 +17,7 @@ extends     GameDataBase
         $chars = str_split($game->getWord());
 
         foreach (range('a', 'z') as $c) {            
-            if (!in_array($c, $chars)
+            if (!in_array($c, $chars))
                 $game->addCharacterGuessed($c); 
 
             if ($game->getStatus() === GameEntity::STATUS_FAIL)

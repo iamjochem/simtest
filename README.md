@@ -62,7 +62,7 @@ an example with real values:
 
 ## Installing the app
 
-### Assumptions:
+The following assumptions are made regarding the system where you are installing this app:
 
 1. You have `git` installed. 
 
@@ -70,7 +70,7 @@ an example with real values:
 
 3. You have a working [global] copy of the `composer` command installed, if not please follow the instructions found [here](https://getcomposer.org/doc/00-intro.md), an alternative for MacOSX users is to run `brew install composer`.
 
-run the following commands in a directory of your choice (you will be asked for a few configuration details during the process):
+Run the following commands in a directory of your choice (you will be asked for a few configuration details during the process):
 
 ```
 git clone git@github.com:iamjochem/simtest.git

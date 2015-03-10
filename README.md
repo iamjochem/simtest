@@ -35,8 +35,8 @@ all endpoints return the following JSON data structure (assuming no errors);
 {
 	"game_id" 	: <INTEGER>,
 	"tries_left": <INTEGER>,
-	"status"	: "<STATUS>",
-	"word"		: "<WORD_STRING>"
+	"status"	: <STATUS>,
+	"word"		: <WORD_STRING>
 }
 ```
 
@@ -44,7 +44,19 @@ with the following logical replacements:
 
 1. <INTEGER>		- an unsigned integer
 2. <STATUS>			- one of the following string values: busy, fail, success
-3. <WORD_STRING>	- a string representing the guessed word, unguessed letters are replaced by a `.`
+3. <WORD_STRING>	- a string representing the guessed word, unguessed letters are replaced by the `.` (period) character.
+
+an example with real values:
+
+```json
+{
+	"game_id" 	: 1,
+	"tries_left": 11,
+	"status"	: "busy",
+	"word"		: "...."
+}
+```
+
 
 
 
